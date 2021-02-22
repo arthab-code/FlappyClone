@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f5d2a741d7e0749acd2741d427ef12, type: 3}
+  m_Name: GameDatabase
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 5072043569891679931, guid: 088c02d46b448dd49a898fc3877bfe32, type: 3}
+  scoreArea: {fileID: 2668952957164639528, guid: fa70a064caca6f04fbbbacb5c79ba0d5,
+    type: 3}

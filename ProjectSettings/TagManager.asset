@@ -13,11 +13,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Column
+  - ScoreArea
+  - Player
+  - Bonus
   - 
   - 
   - 
