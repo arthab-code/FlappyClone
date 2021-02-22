@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class SceneController : MonoBehaviour
+public class SceneController : MonoBehaviour, IRestartableObject
 {
     public GameObject player;
     public GameDatabase gameDatabase;
@@ -14,10 +14,13 @@ public class SceneController : MonoBehaviour
     public float widthTerrain = 25;
     public float heightTerrain;
 
+    private Vector3 originalPosition;
+
     void Start()
     {
-        terrainAmount = new List<GameObject>();
         terrain = gameDatabase.terrain;
+        originalPosition = terrain.transform.position;
+        terrainAmount = new List<GameObject>();   
         InstantiateTerrain(terrain); 
     }
 
@@ -67,5 +70,22 @@ public class SceneController : MonoBehaviour
     private bool FirstTerrainOffCamera()
     {
         return terrainAmount[0].transform.position.x < transform.position.x - widthTerrain ? true : false;
+    }
+
+    private void SetOriginalPosition()
+    {
+        foreach(GameObject terrainEach in terrainAmount)
+        {
+            Destroy(terrainEach.gameObject);
+        }
+
+        terrainAmount.Clear();
+        terrain.transform.position = originalPosition;
+        InstantiateTerrain(terrain);
+    }
+
+    public void DoRestart()
+    {
+        SetOriginalPosition();
     }
 }

@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IRestartableObject
 {
     public float playerSpeed = 3.0f;
     public float maxVelocityVerticalValue = 5;
     public float addForce = 600;
     private Rigidbody2D m_rigidbody2D;
     private PlayerAnimation playerAnimation;
+    private Vector3 originalPosition;
 
     void Start()
     {
+        GameplayManager.Instance.isPlaying += DoPlay;
+        GameplayManager.Instance.isPause += DoPause;
+
         m_rigidbody2D = GetComponent<Rigidbody2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
+        originalPosition = transform.position;
     }
 
     private void Update()
@@ -63,5 +68,31 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Column") || collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             m_rigidbody2D.simulated = false;
+    }
+
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("ScoreArea"))
+        {
+            GameplayManager.Instance.AddScore(1);
+        }
+            
+    }
+
+    private void DoPause()
+    {
+        m_rigidbody2D.simulated = false;
+    }
+
+    private void DoPlay()
+    {
+        m_rigidbody2D.simulated = true;
+    }
+
+    public void DoRestart()
+    {
+        m_rigidbody2D.simulated = true;
+        transform.position = originalPosition;
     }
 }

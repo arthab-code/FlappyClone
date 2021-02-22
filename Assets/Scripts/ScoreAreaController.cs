@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreAreaController : MonoBehaviour
+public class ScoreAreaController : MonoBehaviour, IRestartableObject
 {
     public GameDatabase gameDatabase;
     public float distanceBetweenColumns = 5;
 
+    private Vector3 originalPosition;
     private GameObject scoreArea;
     private List<GameObject> scoreAreaAmount;
     public List<GameObject> ScoreAreaAmount
@@ -18,11 +19,9 @@ public class ScoreAreaController : MonoBehaviour
     {
         scoreArea = gameDatabase.scoreArea;
         scoreAreaAmount = new List<GameObject>();
+        originalPosition = scoreArea.transform.position;
 
-        for (int i = 0; i < 5; i++)
-        {
-            InstantiateScoreArea(scoreArea);
-        }
+        SetStartPosition();
     }
 
     // Update is called once per frame
@@ -31,6 +30,23 @@ public class ScoreAreaController : MonoBehaviour
         if (ReloadScoreAreaTrigger())
         {
             RemoveFirstScoreArea();
+            InstantiateScoreArea(scoreArea);
+        }
+    }
+
+    private void SetStartPosition()
+    {
+        foreach(GameObject scoreAmount in scoreAreaAmount)
+        {
+            Destroy(scoreAmount.gameObject);
+        }
+
+        scoreAreaAmount.Clear();
+
+        scoreArea.transform.position = originalPosition;
+
+        for (int i = 0; i < 5; i++)
+        {
             InstantiateScoreArea(scoreArea);
         }
     }
@@ -64,6 +80,11 @@ public class ScoreAreaController : MonoBehaviour
     private bool ReloadScoreAreaTrigger()
     {
         return scoreAreaAmount[0].transform.position.x < Camera.main.transform.position.x - 15 ? true : false;
+    }
+
+    public void DoRestart()
+    {
+        SetStartPosition();
     }
 
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BonusPositionController : MonoBehaviour
+public class BonusController : MonoBehaviour, IRestartableObject
 {
     public GameObject scoreArea;
     public float destinationTime = 1f;
@@ -35,6 +35,7 @@ public class BonusPositionController : MonoBehaviour
     void Update()
     {
         ActivateBonus();
+        OutOfScene();
     }
 
     private void SetBonusOnScene()
@@ -70,7 +71,22 @@ public class BonusPositionController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
             RemoveBonusFromScene();
+            GameplayManager.Instance.AddScore(10);
+        }
     }
 
+    private void OutOfScene()
+    {
+        if (transform.position.x  < Camera.main.transform.position.x - 15)
+        {
+            RemoveBonusFromScene();
+        }
+    }
+
+    public void DoRestart()
+    {
+        RemoveBonusFromScene();
+    }
 }

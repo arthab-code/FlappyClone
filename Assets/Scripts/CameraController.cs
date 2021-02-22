@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraController : MonoBehaviour, IRestartableObject
 {
     private Vector3 originPosition;
 
@@ -24,5 +24,10 @@ public class CameraController : MonoBehaviour
     {
         Vector3 playerPosition = player.transform.position + originPosition;
         transform.position = Vector3.Lerp(originPosition, new Vector3(playerPosition.x, 0, playerPosition.z),  3f);
+    }
+
+    public void DoRestart()
+    {
+        transform.position = originPosition;
     }
 }
