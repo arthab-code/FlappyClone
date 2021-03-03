@@ -7,33 +7,33 @@ public class GameplayManager : Singleton<GameplayManager>
 {
     private int points = 0;
     private List<IRestartableObject> iRestartableObjects;
+    private bool endGame;
 
     public delegate void GameCallBack();
     public event GameCallBack isPlaying;
     public event GameCallBack isPause;
 
-    private enum EGameState
+    public enum EGameState
     {
         Playing,
         Pause
     }
 
-    private EGameState gameState;
+    public EGameState gameState;
 
     void Start()
     {
-        gameState = EGameState.Playing;
+        gameState = EGameState.Pause;
+        isPause();
         iRestartableObjects = new List<IRestartableObject>();
         GetAllRestartableObjects();
+        endGame = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            Restart();
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && endGame == false)
             PauseManager();
     }
 
@@ -47,7 +47,7 @@ public class GameplayManager : Singleton<GameplayManager>
         return points;
     }
 
-    private void PauseManager()
+    public void PauseManager()
     {
         switch (gameState)
         {
@@ -61,8 +61,6 @@ public class GameplayManager : Singleton<GameplayManager>
                 gameState = EGameState.Playing;
                 break;
         }
-
-        Debug.Log(gameState);
     }
 
     private void GetAllRestartableObjects()
@@ -82,10 +80,15 @@ public class GameplayManager : Singleton<GameplayManager>
         }
     }
 
-    private void Restart()
+    public bool SetEndGaming(bool value)
+    {
+        return endGame = value;
+    }
+
+    public void Restart()
     {
         points = 0;
-
+        SetEndGaming(false);
         foreach(IRestartableObject restartableObject in iRestartableObjects)
         {
             restartableObject.DoRestart();

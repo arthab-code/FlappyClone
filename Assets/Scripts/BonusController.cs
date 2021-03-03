@@ -6,6 +6,8 @@ public class BonusController : MonoBehaviour, IRestartableObject
 {
     public GameObject scoreArea;
     public float destinationTime = 1f;
+    public GameDatabase gameDatabase;
+    public AudioSource audioSource;
 
     private ScoreAreaController scoreAreaController;
     private Vector3 outPosition;
@@ -28,7 +30,6 @@ public class BonusController : MonoBehaviour, IRestartableObject
 
         isActive = false;
         activateTime = 0;
-
     }
 
     // Update is called once per frame
@@ -41,7 +42,7 @@ public class BonusController : MonoBehaviour, IRestartableObject
     private void SetBonusOnScene()
     {
         float lastItemPosition = scoreAreaController.ScoreAreaAmount[ scoreAreaController.ScoreAreaAmount.Count -1 ].transform.position.x;
-        respawnRangeHorizontal = Random.Range(0.5f, scoreAreaController.distanceBetweenColumns - 0.5f);
+        respawnRangeHorizontal = Random.Range(1f, scoreAreaController.distanceBetweenColumns - 1f);
         respawnRangeVertical = Random.Range(5f, cameraRangeVertical - 5f);
         transform.position = new Vector2(lastItemPosition + respawnRangeHorizontal, respawnRangeVertical);
 
@@ -72,6 +73,7 @@ public class BonusController : MonoBehaviour, IRestartableObject
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            audioSource.Play();
             RemoveBonusFromScene();
             GameplayManager.Instance.AddScore(10);
         }

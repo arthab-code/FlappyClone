@@ -7,11 +7,12 @@ public class SceneController : MonoBehaviour, IRestartableObject
 {
     public GameObject player;
     public GameDatabase gameDatabase;
+    public AudioSource audioSource;
 
     private GameObject terrain;
     private List<GameObject> terrainAmount;
 
-    public float widthTerrain = 25;
+    public float widthTerrain = 27;
     public float heightTerrain;
 
     private Vector3 originalPosition;
@@ -21,7 +22,9 @@ public class SceneController : MonoBehaviour, IRestartableObject
         terrain = gameDatabase.terrain;
         originalPosition = terrain.transform.position;
         terrainAmount = new List<GameObject>();   
-        InstantiateTerrain(terrain); 
+        InstantiateTerrain(terrain);
+
+        PlayMusic();
     }
 
     void Update()
@@ -82,6 +85,11 @@ public class SceneController : MonoBehaviour, IRestartableObject
         terrainAmount.Clear();
         terrain.transform.position = originalPosition;
         InstantiateTerrain(terrain);
+    }
+
+    private void PlayMusic()
+    {
+        audioSource.Play();
     }
 
     public void DoRestart()

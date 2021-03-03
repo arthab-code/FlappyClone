@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IRestartableObject
 {
+    public Canvas GUIObject;
     public float playerSpeed = 3.0f;
     public float maxVelocityVerticalValue = 5;
     public float addForce = 600;
+    private GUIController GUIController;
     private Rigidbody2D m_rigidbody2D;
     private PlayerAnimation playerAnimation;
     private Vector3 originalPosition;
@@ -19,6 +21,7 @@ public class PlayerController : MonoBehaviour, IRestartableObject
         m_rigidbody2D = GetComponent<Rigidbody2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
         originalPosition = transform.position;
+        GUIController = GUIObject.GetComponent<GUIController>();
     }
 
     private void Update()
@@ -67,7 +70,11 @@ public class PlayerController : MonoBehaviour, IRestartableObject
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Column") || collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
             m_rigidbody2D.simulated = false;
+            GameplayManager.Instance.PauseManager();
+            GameplayManager.Instance.SetEndGaming(true);
+        }
     }
 
 
@@ -92,6 +99,8 @@ public class PlayerController : MonoBehaviour, IRestartableObject
 
     public void DoRestart()
     {
+        m_rigidbody2D.velocity = Vector3.zero;
+        m_rigidbody2D.angularVelocity = 0f;
         m_rigidbody2D.simulated = true;
         transform.position = originalPosition;
     }
